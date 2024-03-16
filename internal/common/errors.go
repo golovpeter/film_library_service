@@ -7,9 +7,12 @@ import (
 )
 
 var (
-	UserExistError    = errors.New("user already exist")
-	BindJSONError     = errors.New("error binding JSON")
-	RegisterUserError = errors.New("error register user")
+	UserExistError          = errors.New("user already exist")
+	UserDoesNotExistError   = errors.New("user does not exist")
+	InvalidCredentialsError = errors.New("invalid username or password")
+	BindJSONError           = errors.New("error binding JSON")
+	RegisterUserError       = errors.New("error register user")
+	LoginUserError          = errors.New("error login user")
 )
 
 func MakeErrorResponse(w http.ResponseWriter, status int, error error) {

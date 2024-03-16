@@ -1,5 +1,6 @@
 server:
   port: 8080
+  jwt_key: exampleKey
 
 database:
   host: postgres

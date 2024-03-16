@@ -6,6 +6,7 @@ import (
 
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
 	"github.com/golovpeter/vk_intership_test_task/internal/config"
+	"github.com/golovpeter/vk_intership_test_task/internal/handler/login_user"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/register_user"
 	"github.com/golovpeter/vk_intership_test_task/internal/repository/users"
 	usersservice "github.com/golovpeter/vk_intership_test_task/internal/service/users"
@@ -52,11 +53,13 @@ func main() {
 
 	usersRepository := users.NewRepository(dbConn)
 
-	usersService := usersservice.NewService(usersRepository)
+	usersService := usersservice.NewService(usersRepository, cfg.Server.JWTKey)
 
 	registerUserHandler := http.HandlerFunc(register_user.NewHandler(logger, usersService).Register)
+	loginUserHandler := http.HandlerFunc(login_user.NewHandler(logger, usersService).Login)
 
-	mux.Handle("/v1/user/register", registerUserHandler)
+	mux.Handle("POST /v1/user/register", registerUserHandler)
+	mux.Handle("POST /v1/user/login", loginUserHandler)
 
 	if err = http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), mux); err != nil {
 		panic(err)

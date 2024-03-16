@@ -39,7 +39,19 @@ func (r *repository) Register(ctx context.Context, data *UserDataIn) error {
 	return nil
 }
 
-func (r *repository) Login(ctx context.Context, data *UserDataIn) (string, error) {
-	//TODO implement me
-	panic("implement me")
+const getUserQuery = `
+	SELECT id, username, password_hash, role
+	FROM users
+	WHERE username = $1
+`
+
+func (r *repository) GetUserInfo(ctx context.Context, data *UserDataIn) (*UserDataOut, error) {
+	var out UserDataOut
+
+	err := r.conn.GetContext(ctx, &out, getUserQuery, data.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return &out, nil
 }

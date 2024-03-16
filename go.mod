@@ -4,6 +4,7 @@ go 1.22
 
 require (
 	github.com/casbin/casbin/v2 v2.84.1
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/jackc/pgx/v5 v5.5.5
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/pressly/goose v2.7.0+incompatible
