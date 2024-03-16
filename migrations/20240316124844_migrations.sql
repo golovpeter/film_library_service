@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS users
     id            BIGSERIAL PRIMARY KEY,
     username      VARCHAR(20) UNIQUE NOT NULL,
     password_hash TEXT               NOT NULL,
-    created_at    TIMESTAMP DEFAULT NOW()
+    role          varchar(20)        NOT NULL default 'user',
+    created_at    TIMESTAMP WITH TIME ZONE    DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS films
@@ -20,9 +21,9 @@ CREATE TABLE IF NOT EXISTS films
 CREATE TABLE IF NOT EXISTS actors
 (
     id          BIGSERIAL PRIMARY KEY,
-    first_name  VARCHAR(50) NOT NULL,
-    second_name VARCHAR(50) NOT NULL,
-    birth_date  TIMESTAMP   NOT NULL
+    first_name  VARCHAR(50)              NOT NULL,
+    second_name VARCHAR(50)              NOT NULL,
+    birth_date  TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS files_and_actors
