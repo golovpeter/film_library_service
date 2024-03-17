@@ -40,7 +40,7 @@ func (h *handler) DeleteActor(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		h.logger.WithError(err).Error(common.CreateActorError)
-		common.MakeErrorResponse(w, http.StatusBadRequest, common.CreateActorError)
+		common.MakeErrorResponse(w, http.StatusBadRequest, common.DeleteActorError)
 		return
 	}
 }

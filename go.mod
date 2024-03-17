@@ -9,6 +9,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/pressly/goose v2.7.0+incompatible
 	github.com/sirupsen/logrus v1.9.3
+	golang.org/x/net v0.10.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
