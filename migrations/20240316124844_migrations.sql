@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS films
     id           BIGSERIAL PRIMARY KEY,
     title        VARCHAR(150) NOT NULL,
     description  VARCHAR(1000),
-    release_date timestamp    not null,
-    rating       DECIMAL(3, 1) CHECK (rating >= 0 AND rating <= 10),
+    release_date TIMESTAMP    not null,
+    rating       INT CHECK (rating >= 0 AND rating <= 10),
     created_at   TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -33,16 +33,16 @@ CREATE TABLE IF NOT EXISTS actors
 CREATE TABLE IF NOT EXISTS films_and_actors
 (
     id       BIGSERIAL,
-    film_id  INT NOT NULL REFERENCES films,
-    actor_id INT NOT NULL REFERENCES actors
+    film_id  INT NOT NULL REFERENCES films ON DELETE CASCADE,
+    actor_id INT NOT NULL REFERENCES actors ON DELETE CASCADE
 );
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TYPE IF EXISTS gender;
 DROP TABLE IF EXISTS films_and_actors;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS films;
 DROP TABLE IF EXISTS actors;
+DROP TYPE IF EXISTS gender;
 -- +goose StatementEnd
