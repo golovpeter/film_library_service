@@ -76,12 +76,22 @@ func (r *repository) ChangeActorInfo(ctx context.Context, data *ChangeActorDataI
 	return nil
 }
 
-func (r *repository) ChangeActorInfo(ctx context.Context, data *ActorDataIn) error {
-	//TODO implement me
-	panic("implement me")
-}
+const deleteActorQuery = `
+	DELETE FROM actors
+	WHERE id = $1
+`
 
 func (r *repository) DeleteActor(ctx context.Context, data *DeleteActorIn) error {
-	//TODO implement me
-	panic("implement me")
+	res, err := r.conn.ExecContext(ctx, deleteActorQuery, data.ActorID)
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return common.ActorDoesNotExistError
+	}
+
+	return nil
 }

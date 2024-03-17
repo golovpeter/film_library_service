@@ -31,7 +31,8 @@ func (s *service) ChangeActorInfo(ctx context.Context, data *ChangeActorDataIn) 
 	})
 }
 
-func (s service) DeleteActor(ctx context.Context, data *DeleteActorIn) error {
-	//TODO implement me
-	panic("implement me")
+func (s *service) DeleteActor(ctx context.Context, data *DeleteActorIn) error {
+	return s.repository.DeleteActor(ctx, &actors.DeleteActorIn{
+		ActorID: data.ActorID,
+	})
 }
