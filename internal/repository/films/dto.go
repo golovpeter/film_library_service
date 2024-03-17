@@ -7,3 +7,12 @@ type CreateFilmIn struct {
 	Rating      int
 	Actors      []string
 }
+
+type ChangeFilmIn struct {
+	ID          int64
+	Title       string
+	Description string
+	ReleaseDate string
+	Rating      int
+	Actors      []string
+}

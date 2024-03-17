@@ -3,7 +3,7 @@ package films
 import "context"
 
 type Repository interface {
-	CreateFilm(ctx context.Context, data *CreateFilmIn) error
-	ChangeFilmData() error
+	InsertNewFilm(ctx context.Context, data *CreateFilmIn) error
+	ChangeFilmData(ctx context.Context, data *ChangeFilmIn) error
 	DeleteFilm() error
 }

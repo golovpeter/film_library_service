@@ -1,4 +1,4 @@
-package create_film
+package change_film_data
 
 import (
 	"encoding/json"
@@ -25,8 +25,8 @@ func NewHandler(
 	}
 }
 
-func (h *handler) CreateFilm(w http.ResponseWriter, r *http.Request) {
-	var in *CreatFilmIn
+func (h *handler) ChangeFilmData(w http.ResponseWriter, r *http.Request) {
+	var in *ChangeFilmIn
 
 	err := json.NewDecoder(r.Body).Decode(&in)
 	if err != nil {
@@ -35,16 +35,17 @@ func (h *handler) CreateFilm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.CreateFilm(r.Context(), &films.CreateFilmIn{
+	err = h.service.ChangeFilmData(r.Context(), &films.ChangeFilmIn{
+		ID:          in.ID,
 		Title:       in.Title,
 		Description: in.Description,
-		ReleaseDate: in.ReleaseDate,
 		Rating:      in.Rating,
+		ReleaseDate: in.ReleaseDate,
 		Actors:      in.Actors,
 	})
 	if err != nil {
-		h.logger.WithError(err).Error(common.CreateActorError)
-		common.MakeErrorResponse(w, http.StatusBadRequest, common.CreateFilmError)
+		h.logger.WithError(err).Error(common.ChangeActorDataError)
+		common.MakeErrorResponse(w, http.StatusBadRequest, common.ChangeFilmDataError)
 		return
 	}
 }

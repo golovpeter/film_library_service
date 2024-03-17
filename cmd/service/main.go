@@ -8,6 +8,7 @@ import (
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
 	"github.com/golovpeter/vk_intership_test_task/internal/config"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/change_actor_data"
+	"github.com/golovpeter/vk_intership_test_task/internal/handler/change_film_data"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/create_actor"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/create_film"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/delete_actor"
@@ -73,13 +74,15 @@ func main() {
 	changeActorDataHandler := change_actor_data.NewHandler(logger, actorsService)
 	deleteActorHandler := delete_actor.NewHandler(logger, actorsService)
 	createFilmHandler := create_film.NewHandler(logger, filmsService)
+	changeFildDataHandler := change_film_data.NewHandler(logger, filmsService)
 
 	r.HandleFunc("POST /v1/user/register", registerUserHandler.Register)
 	r.HandleFunc("POST /v1/user/login", loginUserHandler.Login)
 	r.HandleFunc("POST /v1/actor/create", createActorHandler.CreateActor)
 	r.HandleFunc("POST /v1/actor/change", changeActorDataHandler.ChangeActorData)
 	r.HandleFunc("DELETE /v1/actor/delete", deleteActorHandler.DeleteActor)
-	r.HandleFunc("POST /v1/film/create", createFilmHandler.CreateActor)
+	r.HandleFunc("POST /v1/film/create", createFilmHandler.CreateFilm)
+	r.HandleFunc("POST /v1/film/change", changeFildDataHandler.ChangeFilmData)
 
 	mux := authorization.AuthorizationMiddleware(logger, enf, r)
 
