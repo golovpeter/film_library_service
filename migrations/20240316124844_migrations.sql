@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS actors
     birth_date  TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS files_and_actors
+CREATE TABLE IF NOT EXISTS films_and_actors
 (
     id       BIGSERIAL,
     film_id  INT NOT NULL REFERENCES films,
