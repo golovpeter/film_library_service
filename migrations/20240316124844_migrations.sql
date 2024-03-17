@@ -18,12 +18,14 @@ CREATE TABLE IF NOT EXISTS films
     rating       DECIMAL(3, 1) CHECK (rating >= 0 AND rating <= 10)
 );
 
+CREATE TYPE gender AS ENUM ('male', 'female');
+
 CREATE TABLE IF NOT EXISTS actors
 (
-    id          BIGSERIAL PRIMARY KEY,
-    first_name  VARCHAR(50)              NOT NULL,
-    second_name VARCHAR(50)              NOT NULL,
-    birth_date  TIMESTAMP WITH TIME ZONE NOT NULL
+    id         BIGSERIAL PRIMARY KEY,
+    name       VARCHAR(50)              NOT NULL,
+    gender     gender                   NOT NULL,
+    birth_date TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS films_and_actors
@@ -39,5 +41,5 @@ CREATE TABLE IF NOT EXISTS films_and_actors
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS films;
 DROP TABLE IF EXISTS actors;
-DROP TABLE IF EXISTS files_and_actors;
+DROP TABLE IF EXISTS films_and_actors;
 -- +goose StatementEnd
