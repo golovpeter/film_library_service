@@ -2,6 +2,8 @@ package actors
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
 	"github.com/jmoiron/sqlx"
@@ -21,18 +23,54 @@ const insertActorQuery = `
 `
 
 func (r *repository) CreateActor(ctx context.Context, data *ActorDataIn) error {
-	res, err := r.conn.ExecContext(ctx, insertActorQuery, data.Name, data.Gender, data.BirthDate)
-	if err != nil {
-		return err
+	_, err := r.conn.ExecContext(ctx, insertActorQuery, data.Name, data.Gender, data.BirthDate)
+	return err
+}
+
+func (r *repository) ChangeActorInfo(ctx context.Context, data *ChangeActorDataIn) error {
+	var queryBuilder strings.Builder
+	var args []interface{}
+	argIdx := 1
+
+	queryBuilder.WriteString("UPDATE actors SET ")
+
+	if data.Name != "" {
+		queryBuilder.WriteString(fmt.Sprintf("name = $%d, ", argIdx))
+		args = append(args, data.Name)
+		argIdx++
 	}
 
-	rowsAffected, err := res.RowsAffected()
-	if err != nil {
-		return err
+	if data.Gender != "" {
+		queryBuilder.WriteString(fmt.Sprintf("gender = $%d, ", argIdx))
+		args = append(args, data.Gender)
+		argIdx++
 	}
 
-	if rowsAffected == 0 {
-		return common.ActorAlreadyExist
+	if data.BirthDate != "" {
+		queryBuilder.WriteString(fmt.Sprintf("birth_date = $%d, ", argIdx))
+		args = append(args, data.BirthDate)
+		argIdx++
+	}
+
+	query := strings.TrimSuffix(queryBuilder.String(), ", ")
+
+	if len(args) > 0 {
+		query += fmt.Sprintf(" WHERE id = $%d", argIdx)
+		args = append(args, data.ID)
+
+		res, err := r.conn.ExecContext(ctx, query, args...)
+		if err != nil {
+			return err
+		}
+
+		rowsAffected, err := res.RowsAffected()
+		if err != nil {
+			return err
+		}
+
+		if rowsAffected == 0 {
+			return common.ActorDoesNotExistError
+		}
 	}
 
 	return nil

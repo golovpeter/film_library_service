@@ -13,8 +13,9 @@ var (
 	BindJSONError           = errors.New("error binding JSON")
 	RegisterUserError       = errors.New("error register user")
 	LoginUserError          = errors.New("error login user")
-	ActorAlreadyExist       = errors.New("actor already exist")
 	CreateActorError        = errors.New("error create actor")
+	ChangeActorDataError    = errors.New("error change actor data")
+	ActorDoesNotExistError  = errors.New("actor does not exist")
 )
 
 func MakeErrorResponse(w http.ResponseWriter, status int, error error) {

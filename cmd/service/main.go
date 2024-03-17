@@ -7,6 +7,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
 	"github.com/golovpeter/vk_intership_test_task/internal/config"
+	"github.com/golovpeter/vk_intership_test_task/internal/handler/change_actor_data"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/create_actor"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/login_user"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/register_user"
@@ -63,10 +64,12 @@ func main() {
 	registerUserHandler := register_user.NewHandler(logger, usersService)
 	loginUserHandler := login_user.NewHandler(logger, usersService)
 	createActorHandler := create_actor.NewHandler(logger, actorsService)
+	changeActorDataHandler := change_actor_data.NewHandler(logger, actorsService)
 
 	r.HandleFunc("POST /v1/user/register", registerUserHandler.Register)
 	r.HandleFunc("POST /v1/user/login", loginUserHandler.Login)
 	r.HandleFunc("POST /v1/actor/create", createActorHandler.CreateActor)
+	r.HandleFunc("POST /v1/actor/change", changeActorDataHandler.ChangeActorData)
 
 	mux := authorization.AuthorizationMiddleware(logger, enf, r)
 
