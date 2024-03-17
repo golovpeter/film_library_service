@@ -4,11 +4,16 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
 	"github.com/golovpeter/vk_intership_test_task/internal/config"
+	"github.com/golovpeter/vk_intership_test_task/internal/handler/create_actor"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/login_user"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/register_user"
+	"github.com/golovpeter/vk_intership_test_task/internal/middleware/authorization"
+	"github.com/golovpeter/vk_intership_test_task/internal/repository/actors"
 	"github.com/golovpeter/vk_intership_test_task/internal/repository/users"
+	actorsservice "github.com/golovpeter/vk_intership_test_task/internal/service/actors"
 	usersservice "github.com/golovpeter/vk_intership_test_task/internal/service/users"
 	"github.com/sirupsen/logrus"
 )
@@ -35,11 +40,11 @@ func main() {
 
 	logger.SetLevel(level)
 
-	//enf, err := casbin.NewEnforcer(casbinModelPath, casbinPolicyPath)
-	//if err != nil {
-	//	logger.Error("error create enforcer: ", err.Error())
-	//	return
-	//}
+	enf, err := casbin.NewEnforcer(casbinModelPath, casbinPolicyPath)
+	if err != nil {
+		logger.Error("error create enforcer: ", err.Error())
+		return
+	}
 
 	dbConn, err := common.CreateDbClient(cfg.Database)
 	if err != nil {
@@ -47,19 +52,23 @@ func main() {
 		return
 	}
 
-	mux := http.NewServeMux()
-
-	//authMiddleware := authorization.NewMiddleware(logger, enf)
+	r := http.NewServeMux()
 
 	usersRepository := users.NewRepository(dbConn)
+	actorsRepository := actors.NewRepository(dbConn)
 
 	usersService := usersservice.NewService(usersRepository, cfg.Server.JWTKey)
+	actorsService := actorsservice.NewService(actorsRepository)
 
-	registerUserHandler := http.HandlerFunc(register_user.NewHandler(logger, usersService).Register)
-	loginUserHandler := http.HandlerFunc(login_user.NewHandler(logger, usersService).Login)
+	registerUserHandler := register_user.NewHandler(logger, usersService)
+	loginUserHandler := login_user.NewHandler(logger, usersService)
+	createActorHandler := create_actor.NewHandler(logger, actorsService)
 
-	mux.Handle("POST /v1/user/register", registerUserHandler)
-	mux.Handle("POST /v1/user/login", loginUserHandler)
+	r.HandleFunc("POST /v1/user/register", registerUserHandler.Register)
+	r.HandleFunc("POST /v1/user/login", loginUserHandler.Login)
+	r.HandleFunc("POST /v1/actor/create", createActorHandler.CreateActor)
+
+	mux := authorization.AuthorizationMiddleware(logger, enf, r)
 
 	if err = http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), mux); err != nil {
 		panic(err)

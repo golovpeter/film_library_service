@@ -40,7 +40,7 @@ func (r *repository) Register(ctx context.Context, data *UserDataIn) error {
 }
 
 const getUserQuery = `
-	SELECT id, username, password_hash, role
+	SELECT id, username, password_hash
 	FROM users
 	WHERE username = $1
 `
