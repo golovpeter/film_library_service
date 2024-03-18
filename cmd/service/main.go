@@ -18,6 +18,7 @@ import (
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/get_sorted_films"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/login_user"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/register_user"
+	"github.com/golovpeter/vk_intership_test_task/internal/middleware/accesslog"
 	"github.com/golovpeter/vk_intership_test_task/internal/middleware/authorization"
 	"github.com/golovpeter/vk_intership_test_task/internal/repository/actors"
 	"github.com/golovpeter/vk_intership_test_task/internal/repository/films"
@@ -96,7 +97,8 @@ func main() {
 	r.HandleFunc("GET /v1/film/find", findFilmHandler.FindFilm)
 	r.HandleFunc("GET /v1/actors", getAllActors.GetAllActors)
 
-	mux := authorization.AuthorizationMiddleware(logger, enf, usersRepository, r)
+	logMux := accesslog.AccessLogMiddleware(logger, r)
+	mux := authorization.AuthorizationMiddleware(logger, enf, usersRepository, logMux)
 
 	if err = http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), mux); err != nil {
 		panic(err)
