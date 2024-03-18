@@ -14,6 +14,7 @@ import (
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/delete_actor"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/delete_film"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/find_film"
+	"github.com/golovpeter/vk_intership_test_task/internal/handler/get_all_actors"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/get_sorted_films"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/login_user"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/register_user"
@@ -76,6 +77,7 @@ func main() {
 	createActorHandler := create_actor.NewHandler(logger, actorsService)
 	changeActorDataHandler := change_actor_data.NewHandler(logger, actorsService)
 	deleteActorHandler := delete_actor.NewHandler(logger, actorsService)
+	getAllActors := get_all_actors.NewHandler(logger, actorsService)
 	createFilmHandler := create_film.NewHandler(logger, filmsService)
 	changeFilmDataHandler := change_film_data.NewHandler(logger, filmsService)
 	deleteFilmHandler := delete_film.NewHandler(logger, filmsService)
@@ -92,6 +94,7 @@ func main() {
 	r.HandleFunc("DELETE /v1/film/delete", deleteFilmHandler.DeleteFilm)
 	r.HandleFunc("GET /v1/films", getAllFilmsHandler.DeleteFilm)
 	r.HandleFunc("GET /v1/film/find", findFilmHandler.FindFilm)
+	r.HandleFunc("GET /v1/actors", getAllActors.GetAllActors)
 
 	mux := authorization.AuthorizationMiddleware(logger, enf, r)
 

@@ -3,6 +3,7 @@ package actors
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
@@ -22,7 +23,7 @@ const insertActorQuery = `
 	VALUES ($1 , $2, $3)
 `
 
-func (r *repository) CreateActor(ctx context.Context, data *ActorDataIn) error {
+func (r *repository) CreateActor(ctx context.Context, data *ActorData) error {
 	_, err := r.conn.ExecContext(ctx, insertActorQuery, data.Name, data.Gender, data.BirthDate)
 	return err
 }
@@ -94,4 +95,47 @@ func (r *repository) DeleteActor(ctx context.Context, data *DeleteActorIn) error
 	}
 
 	return nil
+}
+
+const getAllActorsQuery = `
+	SELECT id, name, gender, birth_date
+	FROM actors
+`
+
+func (r *repository) GetAllActors(ctx context.Context) ([]*ActorData, error) {
+	var actors []*ActorData
+
+	err := r.conn.SelectContext(ctx, &actors, getAllActorsQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, actor := range actors {
+		actorFilms, err := r.getActorFilms(ctx, actor.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		actor.Films = actorFilms
+	}
+
+	return actors, nil
+}
+
+const getActorFilmsQuery = `
+	SELECT title
+	FROM films_and_actors
+         JOIN films ON films_and_actors.film_id = films.id
+	WHERE actor_id = $1;
+`
+
+func (r *repository) getActorFilms(ctx context.Context, actorID int64) ([]string, error) {
+	var films []string
+
+	err := r.conn.SelectContext(ctx, &films, getActorFilmsQuery, strconv.FormatInt(actorID, 10))
+	if err != nil {
+		return nil, err
+	}
+
+	return films, nil
 }

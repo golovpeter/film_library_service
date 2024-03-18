@@ -1,9 +1,11 @@
 package actors
 
-type ActorDataIn struct {
+type ActorData struct {
+	ID        int64
 	Name      string
 	Gender    string
 	BirthDate string
+	Films     []string
 }
 
 type ChangeActorDataIn struct {

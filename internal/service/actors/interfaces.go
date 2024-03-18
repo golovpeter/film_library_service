@@ -3,7 +3,8 @@ package actors
 import "context"
 
 type ActorService interface {
-	CreateActor(ctx context.Context, data *ActorDataIn) error
+	CreateActor(ctx context.Context, data *ActorData) error
 	ChangeActorInfo(ctx context.Context, data *ChangeActorDataIn) error
 	DeleteActor(ctx context.Context, data *DeleteActorIn) error
+	GetAllActors(ctx context.Context) ([]*ActorData, error)
 }

@@ -241,8 +241,8 @@ func (r *repository) FindFilmByTitle(ctx context.Context, title string) (*FilmDa
 }
 
 const findFilmByActor = `
-	SELECT films.title, films.description, films.release_date, films.rating
-	FROM FILMS
+	SELECT films.id, title, description, release_date, rating
+	FROM films
 	JOIN films_and_actors ON films.id = films_and_actors.film_id
 	JOIN actors ON films_and_actors.actor_id = actors.id
 	WHERE lower(actors.name) LIKE lower('%' || $1 || '%')

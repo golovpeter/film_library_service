@@ -43,7 +43,7 @@ func (h *handler) CreateActor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.CreateActor(r.Context(), &actors.ActorDataIn{
+	err = h.service.CreateActor(r.Context(), &actors.ActorData{
 		Name:      in.Name,
 		Gender:    in.Gender,
 		BirthDate: in.BirthDate,
