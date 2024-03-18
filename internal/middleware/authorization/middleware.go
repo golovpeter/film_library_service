@@ -2,6 +2,7 @@ package authorization
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
@@ -33,7 +34,15 @@ func AuthorizationMiddleware(
 			return
 		}
 
-		claims, err := common.GetTokenClaims(accessToken)
+		spltToken := strings.Split(accessToken, " ")
+
+		if spltToken[0] != "Bearer" {
+			logger.Error(common.InvalidCredentialsError)
+			common.MakeErrorResponse(w, http.StatusUnauthorized, common.InvalidAuthHeader)
+			return
+		}
+
+		claims, err := common.GetTokenClaims(spltToken[1])
 		if err != nil {
 			logger.WithError(err).Error(err.Error())
 			common.MakeErrorResponse(w, http.StatusUnauthorized, err)
