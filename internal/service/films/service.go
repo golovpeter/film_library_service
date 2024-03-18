@@ -34,7 +34,8 @@ func (s *service) ChangeFilmData(ctx context.Context, data *ChangeFilmIn) error 
 	})
 }
 
-func (s *service) DeleteFilm() error {
-	//TODO implement me
-	panic("implement me")
+func (s *service) DeleteFilm(ctx context.Context, data *DeleteFilmIn) error {
+	return s.repository.DeleteFilm(ctx, &films.DeleteFilmIn{
+		FilmID: data.FilmID,
+	})
 }

@@ -20,6 +20,8 @@ var (
 	UnknownActorError       = errors.New("adding an unknown actor not possible")
 	CreateFilmError         = errors.New("create film error")
 	ChangeFilmDataError     = errors.New("change film data error")
+	DeleteFilmError         = errors.New("delete film error")
+	FilmDoesNotExistError   = errors.New("film doest not exist")
 )
 
 func MakeErrorResponse(w http.ResponseWriter, status int, error error) {

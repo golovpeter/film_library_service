@@ -16,3 +16,7 @@ type ChangeFilmIn struct {
 	Rating      int
 	Actors      []string
 }
+
+type DeleteFilmIn struct {
+	FilmID int64
+}

@@ -161,9 +161,24 @@ func (r *repository) ChangeFilmData(ctx context.Context, data *ChangeFilmIn) err
 	return nil
 }
 
-func (r *repository) DeleteFilm() error {
-	//TODO implement me
-	panic("implement me")
+const deleteFilmQuery = `
+	DELETE FROM films
+	WHERE id = $1
+`
+
+func (r *repository) DeleteFilm(ctx context.Context, data *DeleteFilmIn) error {
+	res, err := r.conn.ExecContext(ctx, deleteFilmQuery, data.FilmID)
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return common.FilmDoesNotExistError
+	}
+
+	return nil
 }
 
 const getActorsIDQuery = `
