@@ -7,4 +7,5 @@ type FilmsService interface {
 	ChangeFilmData(ctx context.Context, data *FilmData) error
 	DeleteFilm(ctx context.Context, data *DeleteFilmIn) error
 	GettingSortedFilms(ctx context.Context, order string) ([]*FilmData, error)
+	FindFilm(ctx context.Context, params *FindFilmIn) (*FilmData, error)
 }

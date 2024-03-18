@@ -12,3 +12,8 @@ type FilmData struct {
 type DeleteFilmIn struct {
 	FilmID int64
 }
+
+type FindFilmIn struct {
+	SearchField string
+	Value       string
+}

@@ -23,6 +23,7 @@ var (
 	DeleteFilmError         = errors.New("delete film error")
 	FilmDoesNotExistError   = errors.New("film doest not exist")
 	GettingFilmsError       = errors.New("error get films")
+	NoMatchesFoundError     = errors.New("no matches found")
 )
 
 func MakeErrorResponse(w http.ResponseWriter, status int, error error) {

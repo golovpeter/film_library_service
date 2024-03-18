@@ -60,3 +60,30 @@ func (s *service) GettingSortedFilms(ctx context.Context, order string) ([]*Film
 
 	return filmsData, nil
 }
+
+func (s *service) FindFilm(ctx context.Context, params *FindFilmIn) (*FilmData, error) {
+	var repoFilm *films.FilmData
+	var err error
+
+	switch params.SearchField {
+	case "title":
+		repoFilm, err = s.repository.FindFilmByTitle(ctx, params.Value)
+		if err != nil {
+			return nil, err
+		}
+	case "actor":
+		repoFilm, err = s.repository.FindFilmByActor(ctx, params.Value)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &FilmData{
+		ID:          repoFilm.ID,
+		Title:       repoFilm.Title,
+		Description: repoFilm.Description,
+		ReleaseDate: repoFilm.ReleaseDate,
+		Rating:      repoFilm.Rating,
+		Actors:      repoFilm.Actors,
+	}, nil
+}

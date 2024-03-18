@@ -218,6 +218,52 @@ func (r *repository) GettingSortedFilms(ctx context.Context, order string) ([]*F
 	return result, nil
 }
 
+const findFilmByTitle = `
+	SELECT id, title, description, release_date, rating
+	FROM films
+	WHERE LOWER(title) LIKE LOWER('%' || $1 || '%')
+	LIMIT 1
+`
+
+func (r *repository) FindFilmByTitle(ctx context.Context, title string) (*FilmData, error) {
+	var result []*FilmData
+
+	err := r.conn.SelectContext(ctx, &result, findFilmByTitle, title)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(result) != 0 {
+		return result[0], nil
+	} else {
+		return nil, common.NoMatchesFoundError
+	}
+}
+
+const findFilmByActor = `
+	SELECT films.title, films.description, films.release_date, films.rating
+	FROM FILMS
+	JOIN films_and_actors ON films.id = films_and_actors.film_id
+	JOIN actors ON films_and_actors.actor_id = actors.id
+	WHERE lower(actors.name) LIKE lower('%' || $1 || '%')
+	LIMIT 1;
+`
+
+func (r *repository) FindFilmByActor(ctx context.Context, actor string) (*FilmData, error) {
+	var result []*FilmData
+
+	err := r.conn.SelectContext(ctx, &result, findFilmByActor, actor)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(result) != 0 {
+		return result[0], nil
+	} else {
+		return nil, common.NoMatchesFoundError
+	}
+}
+
 const getActorsIDQuery = `
 	SELECT id
 	FROM actors

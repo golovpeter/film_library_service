@@ -1,4 +1,4 @@
-package get_sorted_films
+package find_film
 
 import (
 	"encoding/json"
@@ -26,37 +26,36 @@ func NewHandler(
 	}
 }
 
-func (h *handler) DeleteFilm(w http.ResponseWriter, r *http.Request) {
+func (h *handler) FindFilm(w http.ResponseWriter, r *http.Request) {
 	queryValues := r.URL.Query()
-	orderBy := queryValues.Get("order_by")
 
-	valid, errMsg := validateQueryParam(orderBy)
+	searchField := queryValues.Get("search_field")
+	searchValue := queryValues.Get("value")
+
+	valid, errMsg := validateQueryParam(searchField)
 	if !valid {
 		h.logger.Error(errMsg)
 		common.MakeErrorResponse(w, http.StatusBadRequest, errors.New(errMsg))
 		return
 	}
 
-	serviceFilms, err := h.service.GettingSortedFilms(r.Context(), orderBy)
+	serviceFilm, err := h.service.FindFilm(r.Context(), &films.FindFilmIn{
+		SearchField: searchField,
+		Value:       searchValue,
+	})
 	if err != nil {
 		h.logger.WithError(err).Error(common.CreateActorError)
 		common.MakeErrorResponse(w, http.StatusBadRequest, common.GettingFilmsError)
 		return
 	}
 
-	out := make([]*FilmData, len(serviceFilms))
-	for i, film := range serviceFilms {
-		out[i] = &FilmData{
-			ID:          film.ID,
-			Title:       film.Title,
-			Description: film.Description,
-			Rating:      film.Rating,
-			ReleaseDate: film.ReleaseDate,
-			Actors:      film.Actors,
-		}
-	}
-
-	jsonOut, err := json.Marshal(out)
+	jsonOut, err := json.Marshal(&FilmData{
+		ID:          serviceFilm.ID,
+		Title:       serviceFilm.Title,
+		Description: serviceFilm.Description,
+		ReleaseDate: serviceFilm.ReleaseDate,
+		Rating:      serviceFilm.Rating,
+	})
 	if err != nil {
 		h.logger.WithError(err).Error(err.Error())
 		common.MakeErrorResponse(w, http.StatusBadRequest, common.BindJSONError)
