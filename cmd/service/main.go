@@ -96,7 +96,7 @@ func main() {
 	r.HandleFunc("GET /v1/film/find", findFilmHandler.FindFilm)
 	r.HandleFunc("GET /v1/actors", getAllActors.GetAllActors)
 
-	mux := authorization.AuthorizationMiddleware(logger, enf, r)
+	mux := authorization.AuthorizationMiddleware(logger, enf, usersRepository, r)
 
 	if err = http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), mux); err != nil {
 		panic(err)

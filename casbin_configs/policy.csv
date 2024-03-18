@@ -1,2 +1,4 @@
-p, admin, /*, *
-p, user, /login, *
+p, admin, */*, *
+p, user, */films, GET
+p, user, */film/find, GET
+p, user, */actors, GET

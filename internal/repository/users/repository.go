@@ -40,7 +40,7 @@ func (r *repository) Register(ctx context.Context, data *UserDataIn) error {
 }
 
 const getUserQuery = `
-	SELECT id, username, password_hash
+	SELECT id, username, password_hash, role
 	FROM users
 	WHERE username = $1
 `
@@ -54,4 +54,21 @@ func (r *repository) GetUserInfo(ctx context.Context, data *UserDataIn) (*UserDa
 	}
 
 	return &out, nil
+}
+
+const getUserRoleQuery = `
+	SELECT role
+	FROM users
+	WHERE username = $1
+`
+
+func (r *repository) GetUserRole(ctx context.Context, username string) (string, error) {
+	var role string
+
+	err := r.conn.GetContext(ctx, &role, getUserRoleQuery, username)
+	if err != nil {
+		return "", err
+	}
+
+	return role, nil
 }

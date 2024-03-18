@@ -24,6 +24,8 @@ var (
 	FilmDoesNotExistError   = errors.New("film doest not exist")
 	GettingFilmsError       = errors.New("error get films")
 	NoMatchesFoundError     = errors.New("no matches found")
+	InvalidAuthHeader       = errors.New("invalid authorization header")
+	AccessDeniedError       = errors.New("access denied")
 )
 
 func MakeErrorResponse(w http.ResponseWriter, status int, error error) {
