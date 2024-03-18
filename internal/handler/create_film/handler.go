@@ -35,16 +35,26 @@ func (h *handler) CreateFilm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.CreateFilm(r.Context(), &films.FilmData{
+	id, err := h.service.CreateFilm(r.Context(), &films.FilmData{
 		Title:       in.Title,
 		Description: in.Description,
 		ReleaseDate: in.ReleaseDate,
 		Rating:      in.Rating,
 		Actors:      in.Actors,
 	})
+	out, err := json.Marshal(&CreateFilmOut{
+		ID: id,
+	})
 	if err != nil {
-		h.logger.WithError(err).Error(common.CreateActorError)
-		common.MakeErrorResponse(w, http.StatusBadRequest, common.CreateFilmError)
+		h.logger.WithError(err).Error(err.Error())
+		common.MakeErrorResponse(w, http.StatusBadRequest, common.BindJSONError)
+		return
+	}
+
+	_, err = w.Write(out)
+	if err != nil {
+		h.logger.WithError(err).Error(err.Error())
+		common.MakeErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 }

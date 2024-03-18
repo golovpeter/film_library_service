@@ -21,11 +21,23 @@ func NewRepository(conn *sqlx.DB) Repository {
 const insertActorQuery = `
 	INSERT INTO actors(name, gender, birth_date) 
 	VALUES ($1 , $2, $3)
+	RETURNING id
 `
 
-func (r *repository) CreateActor(ctx context.Context, data *ActorData) error {
-	_, err := r.conn.ExecContext(ctx, insertActorQuery, data.Name, data.Gender, data.BirthDate)
-	return err
+func (r *repository) CreateActor(ctx context.Context, data *ActorData) (int64, error) {
+	var newActorId int64
+
+	err := r.conn.QueryRowContext(ctx,
+		insertActorQuery,
+		data.Name,
+		data.Gender,
+		data.BirthDate,
+	).Scan(&newActorId)
+	if err != nil {
+		return 0, err
+	}
+
+	return newActorId, err
 }
 
 func (r *repository) ChangeActorInfo(ctx context.Context, data *ChangeActorDataIn) error {

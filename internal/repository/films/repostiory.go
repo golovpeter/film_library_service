@@ -29,16 +29,16 @@ const insertNewFilmActorsQuery = `
 	VALUES %s
 `
 
-func (r *repository) InsertNewFilm(ctx context.Context, data *FilmData) error {
+func (r *repository) InsertNewFilm(ctx context.Context, data *FilmData) (int64, error) {
 	actorsIDs, err := r.getActorsIDs(ctx, data.Actors)
 
 	if len(data.Actors) != len(actorsIDs) {
-		return common.UnknownActorError
+		return 0, common.UnknownActorError
 	}
 
 	tx, err := r.conn.BeginTx(ctx, nil)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	var newFilmID int64
@@ -49,22 +49,22 @@ func (r *repository) InsertNewFilm(ctx context.Context, data *FilmData) error {
 		data.Rating,
 	).Scan(&newFilmID)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	insertActorsQuery, valueArgs := r.getInsertActorsQuery(actorsIDs, newFilmID)
 
 	_, err = tx.ExecContext(ctx, insertActorsQuery, valueArgs...)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return newFilmID, nil
 }
 
 const deleteCurActorsQuery = `

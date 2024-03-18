@@ -5,3 +5,7 @@ type CreateActorIn struct {
 	Gender    string `json:"gender"`
 	BirthDate string `json:"birth_date"`
 }
+
+type CreateActorOut struct {
+	ID int64 `json:"id"`
+}

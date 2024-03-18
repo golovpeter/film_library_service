@@ -14,7 +14,7 @@ func NewService(repository actors.Repository) ActorService {
 	return &service{repository: repository}
 }
 
-func (s *service) CreateActor(ctx context.Context, data *ActorData) error {
+func (s *service) CreateActor(ctx context.Context, data *ActorData) (int64, error) {
 	return s.repository.CreateActor(ctx, &actors.ActorData{
 		Name:      data.Name,
 		Gender:    data.Gender,

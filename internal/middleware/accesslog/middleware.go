@@ -30,7 +30,7 @@ func AccessLogMiddleware(
 		}).Info("Request received")
 
 		rw := &responseWriter{w, http.StatusOK}
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(rw, r)
 
 		fields := logrus.Fields{
 			"method":   r.Method,

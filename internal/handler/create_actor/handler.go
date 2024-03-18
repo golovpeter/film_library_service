@@ -43,14 +43,25 @@ func (h *handler) CreateActor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.CreateActor(r.Context(), &actors.ActorData{
+	id, err := h.service.CreateActor(r.Context(), &actors.ActorData{
 		Name:      in.Name,
 		Gender:    in.Gender,
 		BirthDate: in.BirthDate,
 	})
+
+	out, err := json.Marshal(&CreateActorOut{
+		ID: id,
+	})
 	if err != nil {
-		h.logger.WithError(err).Error(common.CreateActorError)
-		common.MakeErrorResponse(w, http.StatusBadRequest, common.CreateActorError)
+		h.logger.WithError(err).Error(err.Error())
+		common.MakeErrorResponse(w, http.StatusBadRequest, common.BindJSONError)
+		return
+	}
+
+	_, err = w.Write(out)
+	if err != nil {
+		h.logger.WithError(err).Error(err.Error())
+		common.MakeErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 }

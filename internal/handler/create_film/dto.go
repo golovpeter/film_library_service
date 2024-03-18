@@ -7,3 +7,7 @@ type CreatFilmIn struct {
 	Rating      int      `json:"rating"`
 	Actors      []string `json:"actors"`
 }
+
+type CreateFilmOut struct {
+	ID int64 `json:"id"`
+}

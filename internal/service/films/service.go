@@ -13,7 +13,7 @@ func NewService(repository films.Repository) *service {
 	return &service{repository: repository}
 }
 
-func (s *service) CreateFilm(ctx context.Context, data *FilmData) error {
+func (s *service) CreateFilm(ctx context.Context, data *FilmData) (int64, error) {
 	return s.repository.InsertNewFilm(ctx, &films.FilmData{
 		Title:       data.Title,
 		Description: data.Description,

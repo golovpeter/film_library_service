@@ -97,10 +97,10 @@ func main() {
 	r.HandleFunc("GET /v1/film/find", findFilmHandler.FindFilm)
 	r.HandleFunc("GET /v1/actors", getAllActors.GetAllActors)
 
-	logMux := accesslog.AccessLogMiddleware(logger, r)
-	mux := authorization.AuthorizationMiddleware(logger, enf, usersRepository, logMux)
+	mux := authorization.AuthorizationMiddleware(logger, enf, usersRepository, r)
+	logMux := accesslog.AccessLogMiddleware(logger, mux)
 
-	if err = http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), mux); err != nil {
+	if err = http.ListenAndServe(fmt.Sprintf(":%d", cfg.Server.Port), logMux); err != nil {
 		panic(err)
 	}
 }
