@@ -1,0 +1,547 @@
+basePath: /v1
+definitions:
+  change_actor_data.ChangeActorDataIn:
+    properties:
+      birth_date:
+        example: "1976-05-25"
+        type: string
+      gender:
+        example: male
+        type: string
+      id:
+        example: 10
+        type: integer
+      name:
+        example: Cillian Murphy
+        type: string
+    type: object
+  change_film_data.ChangeFilmIn:
+    properties:
+      actors:
+        example:
+        - Leonardo Dicaprio
+        items:
+          type: string
+        type: array
+      description:
+        example: Description
+        type: string
+      id:
+        example: 3
+        type: integer
+      rating:
+        example: 10
+        type: integer
+      release_date:
+        example: "1998-02-20"
+        type: string
+      title:
+        example: Titanic
+        type: string
+    type: object
+  common.ErrorOut:
+    properties:
+      error_message:
+        example: error message
+        type: string
+    type: object
+  create_actor.CreateActorIn:
+    properties:
+      birth_date:
+        example: "1976-05-25"
+        type: string
+      gender:
+        example: male
+        type: string
+      name:
+        example: Cillian Murphy
+        type: string
+    type: object
+  create_actor.CreateActorOut:
+    properties:
+      id:
+        example: 10
+        type: integer
+    type: object
+  create_film.CreatFilmIn:
+    properties:
+      actors:
+        example:
+        - Leonardo Dicaprio
+        items:
+          type: string
+        type: array
+      description:
+        example: Description
+        type: string
+      rating:
+        example: 10
+        type: integer
+      release_date:
+        example: "1998-02-20"
+        type: string
+      title:
+        example: Titanic
+        type: string
+    type: object
+  create_film.CreateFilmOut:
+    properties:
+      id:
+        example: 10
+        type: integer
+    type: object
+  delete_actor.DeleteActorIn:
+    properties:
+      id:
+        type: integer
+    type: object
+  delete_film.DeleteFilmIn:
+    properties:
+      id:
+        example: 10
+        type: integer
+    type: object
+  find_film.FilmData:
+    properties:
+      description:
+        example: Description
+        type: string
+      id:
+        example: 10
+        type: integer
+      rating:
+        example: 10
+        type: integer
+      release_date:
+        example: "1998-02-20"
+        type: string
+      title:
+        example: Titanic
+        type: string
+    type: object
+  get_all_actors.ActorData:
+    properties:
+      birth_date:
+        example: "1995-03-23"
+        type: string
+      films:
+        example:
+        - Titanic
+        - The Revenant
+        items:
+          type: string
+        type: array
+      gender:
+        example: male
+        type: string
+      id:
+        example: 10
+        type: integer
+      name:
+        example: Leonardo Dicaprio
+        type: string
+    type: object
+  get_sorted_films.FilmData:
+    properties:
+      actors:
+        example:
+        - Leonardo Dicaprio
+        items:
+          type: string
+        type: array
+      description:
+        example: Description
+        type: string
+      id:
+        example: 10
+        type: integer
+      rating:
+        example: 10
+        type: integer
+      release_date:
+        example: "1998-02-20"
+        type: string
+      title:
+        example: Titanic
+        type: string
+    type: object
+  login_user.UserDataIn:
+    properties:
+      password:
+        example: password
+        type: string
+      username:
+        example: user
+        type: string
+    type: object
+  login_user.UserDataOut:
+    properties:
+      access_token:
+        example: token
+        type: string
+    type: object
+  register_user.UserDataIn:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API on Golang for film library service.
+  termsOfService: http://swagger.io/terms/
+  title: Film library service
+  version: "1.0"
+paths:
+  /actor/change:
+    post:
+      consumes:
+      - application/json
+      description: Change actor data
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/change_actor_data.ChangeActorDataIn'
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Actors
+  /actor/create:
+    post:
+      consumes:
+      - application/json
+      description: Creating new actor
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/create_actor.CreateActorIn'
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/create_actor.CreateActorOut'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Actors
+  /actor/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Delete actor
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/delete_actor.DeleteActorIn'
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Actors
+  /actors:
+    get:
+      consumes:
+      - application/json
+      description: Get all actors with films
+      parameters:
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/get_all_actors.ActorData'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Actors
+  /film/change:
+    post:
+      consumes:
+      - application/json
+      description: Change film data
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/change_film_data.ChangeFilmIn'
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Films
+  /film/create:
+    post:
+      consumes:
+      - application/json
+      description: Insert new film
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/create_film.CreatFilmIn'
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/create_film.CreateFilmOut'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Films
+  /film/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all data about film
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/delete_film.DeleteFilmIn'
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Films
+  /film/find:
+    get:
+      consumes:
+      - application/json
+      description: Find film by title or actor
+      parameters:
+      - description: Search field
+        in: query
+        name: search_field
+        type: string
+      - description: Searched value
+        in: query
+        name: value
+        type: string
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/find_film.FilmData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Films
+  /films:
+    get:
+      description: Get all sorted films
+      parameters:
+      - default: '""'
+        description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Sorted field
+        in: query
+        name: order_by
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/get_sorted_films.FilmData'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Films
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login in service
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/login_user.UserDataIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/login_user.UserDataOut'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Users
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: Register in service
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/register_user.UserDataIn'
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.ErrorOut'
+      tags:
+      - Users
+swagger: "2.0"

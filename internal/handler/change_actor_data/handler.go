@@ -26,6 +26,16 @@ func NewHandler(
 	}
 }
 
+// ChangeActorData godoc
+// @Description	 Change actor data
+// @Tags         Actors
+// @Accept       json
+// @Param request body ChangeActorDataIn true "request"
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Success 200
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /actor/change [post]
 func (h *handler) ChangeActorData(w http.ResponseWriter, r *http.Request) {
 	var in *ChangeActorDataIn
 

@@ -25,6 +25,16 @@ func NewHandler(
 	}
 }
 
+// DeleteFilm godoc
+// @Description	 Delete all data about film
+// @Tags         Films
+// @Accept       json
+// @Param request body DeleteFilmIn true "request"
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Success 200
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /film/delete [delete]
 func (h *handler) DeleteFilm(w http.ResponseWriter, r *http.Request) {
 	var in *DeleteFilmIn
 
@@ -39,7 +49,7 @@ func (h *handler) DeleteFilm(w http.ResponseWriter, r *http.Request) {
 		FilmID: in.FilmID,
 	})
 	if err != nil {
-		h.logger.WithError(err).Error(common.CreateActorError)
+		h.logger.WithError(err).Error(common.DeleteFilmError)
 		common.MakeErrorResponse(w, http.StatusBadRequest, common.DeleteFilmError)
 		return
 	}

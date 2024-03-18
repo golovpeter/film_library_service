@@ -13,6 +13,9 @@ import (
 var skipURL = map[string]bool{
 	"/v1/user/register": true,
 	"/v1/user/login":    true,
+	"/favicon.ico":      true,
+	"/swagger.yaml":     true,
+	"/docs":             true,
 }
 
 func AuthorizationMiddleware(

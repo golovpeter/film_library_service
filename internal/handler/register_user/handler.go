@@ -25,6 +25,15 @@ func NewHandler(
 	}
 }
 
+// Register godoc
+// @Description	 Register in service
+// @Tags         Users
+// @Accept       json
+// @Param request body UserDataIn true "request"
+// @Success 200
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /user/register [post]
 func (h *handler) Register(w http.ResponseWriter, r *http.Request) {
 	var in UserDataIn
 

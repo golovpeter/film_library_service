@@ -25,6 +25,16 @@ func NewHandler(
 	}
 }
 
+// DeleteActor godoc
+// @Description	 Delete actor
+// @Tags         Actors
+// @Accept       json
+// @Param request body DeleteActorIn true "request"
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Success 200
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /actor/delete [delete]
 func (h *handler) DeleteActor(w http.ResponseWriter, r *http.Request) {
 	var in *DeleteActorIn
 
@@ -39,7 +49,7 @@ func (h *handler) DeleteActor(w http.ResponseWriter, r *http.Request) {
 		ActorID: in.ActorID,
 	})
 	if err != nil {
-		h.logger.WithError(err).Error(common.CreateActorError)
+		h.logger.WithError(err).Error(common.DeleteActorError)
 		common.MakeErrorResponse(w, http.StatusBadRequest, common.DeleteActorError)
 		return
 	}

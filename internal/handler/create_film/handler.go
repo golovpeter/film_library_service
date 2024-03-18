@@ -25,6 +25,17 @@ func NewHandler(
 	}
 }
 
+// CreateFilm godoc
+// @Description	 Insert new film
+// @Tags         Films
+// @Accept       json
+// @Produce      json
+// @Param request body CreatFilmIn true "request"
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Success 200 {object} CreateFilmOut
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /film/create [post]
 func (h *handler) CreateFilm(w http.ResponseWriter, r *http.Request) {
 	var in *CreatFilmIn
 
@@ -42,6 +53,12 @@ func (h *handler) CreateFilm(w http.ResponseWriter, r *http.Request) {
 		Rating:      in.Rating,
 		Actors:      in.Actors,
 	})
+	if err != nil {
+		h.logger.WithError(err).Error(common.CreateFilmError)
+		common.MakeErrorResponse(w, http.StatusBadRequest, common.CreateFilmError)
+		return
+	}
+
 	out, err := json.Marshal(&CreateFilmOut{
 		ID: id,
 	})

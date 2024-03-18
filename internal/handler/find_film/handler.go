@@ -26,6 +26,17 @@ func NewHandler(
 	}
 }
 
+// @Description	 Find film by title or actor
+// @Tags         Films
+// @Accept       json
+// @Produce      json
+// @Param search_field query string false "Search field"
+// @Param value query string false "Searched value"
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Success 200 {object} FilmData
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /film/find [get]
 func (h *handler) FindFilm(w http.ResponseWriter, r *http.Request) {
 	queryValues := r.URL.Query()
 

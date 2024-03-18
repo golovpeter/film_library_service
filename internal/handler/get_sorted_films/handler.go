@@ -26,7 +26,17 @@ func NewHandler(
 	}
 }
 
-func (h *handler) DeleteFilm(w http.ResponseWriter, r *http.Request) {
+// GettingFilms godoc
+// @Description	 Get all sorted films
+// @Tags         Films
+// @Produce      json
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Param order_by query string false "Sorted field"
+// @Success 200 {object} []FilmData
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /films [get]
+func (h *handler) GettingFilms(w http.ResponseWriter, r *http.Request) {
 	queryValues := r.URL.Query()
 	orderBy := queryValues.Get("order_by")
 
@@ -39,7 +49,7 @@ func (h *handler) DeleteFilm(w http.ResponseWriter, r *http.Request) {
 
 	serviceFilms, err := h.service.GettingSortedFilms(r.Context(), orderBy)
 	if err != nil {
-		h.logger.WithError(err).Error(common.CreateActorError)
+		h.logger.WithError(err).Error(common.GettingFilmsError)
 		common.MakeErrorResponse(w, http.StatusBadRequest, common.GettingFilmsError)
 		return
 	}

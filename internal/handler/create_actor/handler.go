@@ -26,6 +26,17 @@ func NewHandler(
 	}
 }
 
+// CreateActor godoc
+// @Description	 Creating new actor
+// @Tags         Actors
+// @Accept       json
+// @Produce      json
+// @Param request body CreateActorIn true "request"
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Success 200 {object} CreateActorOut
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /actor/create [post]
 func (h *handler) CreateActor(w http.ResponseWriter, r *http.Request) {
 	var in *CreateActorIn
 
@@ -48,6 +59,11 @@ func (h *handler) CreateActor(w http.ResponseWriter, r *http.Request) {
 		Gender:    in.Gender,
 		BirthDate: in.BirthDate,
 	})
+	if err != nil {
+		h.logger.WithError(err).Error(err.Error())
+		common.MakeErrorResponse(w, http.StatusBadRequest, common.CreateActorError)
+		return
+	}
 
 	out, err := json.Marshal(&CreateActorOut{
 		ID: id,

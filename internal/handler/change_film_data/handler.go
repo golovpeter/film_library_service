@@ -25,6 +25,16 @@ func NewHandler(
 	}
 }
 
+// ChangeFilmData godoc
+// @Description	 Change film data
+// @Tags         Films
+// @Accept       json
+// @Param request body ChangeFilmIn true "request"
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Success 200
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /film/change [post]
 func (h *handler) ChangeFilmData(w http.ResponseWriter, r *http.Request) {
 	var in *ChangeFilmIn
 
@@ -45,7 +55,7 @@ func (h *handler) ChangeFilmData(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		h.logger.WithError(err).Error(common.ChangeActorDataError)
-		common.MakeErrorResponse(w, http.StatusBadRequest, common.ChangeFilmDataError)
+		common.MakeErrorResponse(w, http.StatusInternalServerError, common.ChangeFilmDataError)
 		return
 	}
 }

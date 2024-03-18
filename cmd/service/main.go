@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/casbin/casbin/v2"
+	md "github.com/go-openapi/runtime/middleware"
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
 	"github.com/golovpeter/vk_intership_test_task/internal/config"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/change_actor_data"
@@ -34,6 +35,13 @@ const (
 	casbinPolicyPath = "casbin_configs/policy.csv"
 )
 
+// @title           Film library service
+// @version         1.0
+// @description     API on Golang for film library service.
+// @termsOfService  http://swagger.io/terms/
+
+// @host      localhost:8080
+// @BasePath  /v1
 func main() {
 	logger := logrus.New()
 
@@ -93,9 +101,15 @@ func main() {
 	r.HandleFunc("POST /v1/film/create", createFilmHandler.CreateFilm)
 	r.HandleFunc("POST /v1/film/change", changeFilmDataHandler.ChangeFilmData)
 	r.HandleFunc("DELETE /v1/film/delete", deleteFilmHandler.DeleteFilm)
-	r.HandleFunc("GET /v1/films", getAllFilmsHandler.DeleteFilm)
+	r.HandleFunc("GET /v1/films", getAllFilmsHandler.GettingFilms)
 	r.HandleFunc("GET /v1/film/find", findFilmHandler.FindFilm)
 	r.HandleFunc("GET /v1/actors", getAllActors.GetAllActors)
+
+	opts := md.RedocOpts{SpecURL: "/swagger.yaml"}
+	sh := md.Redoc(opts, nil)
+
+	r.Handle("/docs", sh)
+	r.Handle("/swagger.yaml", http.FileServer(http.Dir("./docs/")))
 
 	mux := authorization.AuthorizationMiddleware(logger, enf, usersRepository, r)
 	logMux := accesslog.AccessLogMiddleware(logger, mux)

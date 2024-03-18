@@ -25,11 +25,21 @@ func NewHandler(
 	}
 }
 
+// GetAllActors godoc
+// @Description	 Get all actors with films
+// @Tags         Actors
+// @Accept       json
+// @Produce      json
+// @Param Authorization header string true "Bearer <token>" default("")
+// @Success 200 {object} []ActorData
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /actors [get]
 func (h *handler) GetAllActors(w http.ResponseWriter, r *http.Request) {
 	serviceActors, err := h.service.GetAllActors(r.Context())
 	if err != nil {
-		h.logger.WithError(err).Error(common.CreateActorError)
-		common.MakeErrorResponse(w, http.StatusBadRequest, common.GettingFilmsError)
+		h.logger.WithError(err).Error(common.GettingActorsError)
+		common.MakeErrorResponse(w, http.StatusBadRequest, common.GettingActorsError)
 		return
 	}
 

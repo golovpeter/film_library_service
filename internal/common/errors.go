@@ -23,6 +23,7 @@ var (
 	DeleteFilmError         = errors.New("delete film error")
 	FilmDoesNotExistError   = errors.New("film doest not exist")
 	GettingFilmsError       = errors.New("error get films")
+	GettingActorsError      = errors.New("error get actors")
 	NoMatchesFoundError     = errors.New("no matches found")
 	InvalidAuthHeader       = errors.New("invalid authorization header")
 	AccessDeniedError       = errors.New("access denied")

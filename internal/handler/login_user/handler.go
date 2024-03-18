@@ -25,6 +25,16 @@ func NewHandler(
 	}
 }
 
+// Login godoc
+// @Description	 Login in service
+// @Tags         Users
+// @Accept       json
+// @Produce      json
+// @Param request body UserDataIn true "request"
+// @Success 200 {object} UserDataOut
+// @Failure 400 {object} common.ErrorOut
+// @Failure 500 {object} common.ErrorOut
+// @Router       /user/login [post]
 func (h *handler) Login(w http.ResponseWriter, r *http.Request) {
 	var in UserDataIn
 
