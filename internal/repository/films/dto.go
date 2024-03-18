@@ -1,19 +1,11 @@
 package films
 
-type CreateFilmIn struct {
-	Title       string
-	Description string
-	ReleaseDate string
-	Rating      int
-	Actors      []string
-}
-
-type ChangeFilmIn struct {
+type FilmData struct {
 	ID          int64
-	Title       string
-	Description string
-	ReleaseDate string
-	Rating      int
+	Title       string `db:"title"`
+	Description string `db:"description"`
+	ReleaseDate string `db:"release_date"`
+	Rating      int    `db:"rating"`
 	Actors      []string
 }
 

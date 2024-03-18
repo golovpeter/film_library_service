@@ -35,7 +35,7 @@ func (h *handler) CreateFilm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.CreateFilm(r.Context(), &films.CreateFilmIn{
+	err = h.service.CreateFilm(r.Context(), &films.FilmData{
 		Title:       in.Title,
 		Description: in.Description,
 		ReleaseDate: in.ReleaseDate,

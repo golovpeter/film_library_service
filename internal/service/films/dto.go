@@ -1,14 +1,6 @@
 package films
 
-type CreateFilmIn struct {
-	Title       string
-	Description string
-	ReleaseDate string
-	Rating      int
-	Actors      []string
-}
-
-type ChangeFilmIn struct {
+type FilmData struct {
 	ID          int64
 	Title       string
 	Description string

@@ -22,6 +22,7 @@ var (
 	ChangeFilmDataError     = errors.New("change film data error")
 	DeleteFilmError         = errors.New("delete film error")
 	FilmDoesNotExistError   = errors.New("film doest not exist")
+	GettingFilmsError       = errors.New("error get films")
 )
 
 func MakeErrorResponse(w http.ResponseWriter, status int, error error) {

@@ -13,6 +13,7 @@ import (
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/create_film"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/delete_actor"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/delete_film"
+	"github.com/golovpeter/vk_intership_test_task/internal/handler/get_sorted_films"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/login_user"
 	"github.com/golovpeter/vk_intership_test_task/internal/handler/register_user"
 	"github.com/golovpeter/vk_intership_test_task/internal/middleware/authorization"
@@ -77,6 +78,7 @@ func main() {
 	createFilmHandler := create_film.NewHandler(logger, filmsService)
 	changeFilmDataHandler := change_film_data.NewHandler(logger, filmsService)
 	deleteFilmHandler := delete_film.NewHandler(logger, filmsService)
+	getAllFilmsHandler := get_sorted_films.NewHandler(logger, filmsService)
 
 	r.HandleFunc("POST /v1/user/register", registerUserHandler.Register)
 	r.HandleFunc("POST /v1/user/login", loginUserHandler.Login)
@@ -86,6 +88,7 @@ func main() {
 	r.HandleFunc("POST /v1/film/create", createFilmHandler.CreateFilm)
 	r.HandleFunc("POST /v1/film/change", changeFilmDataHandler.ChangeFilmData)
 	r.HandleFunc("DELETE /v1/film/delete", deleteFilmHandler.DeleteFilm)
+	r.HandleFunc("GET /v1/films", getAllFilmsHandler.DeleteFilm)
 
 	mux := authorization.AuthorizationMiddleware(logger, enf, r)
 

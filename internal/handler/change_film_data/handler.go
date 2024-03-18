@@ -35,7 +35,7 @@ func (h *handler) ChangeFilmData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.service.ChangeFilmData(r.Context(), &films.ChangeFilmIn{
+	err = h.service.ChangeFilmData(r.Context(), &films.FilmData{
 		ID:          in.ID,
 		Title:       in.Title,
 		Description: in.Description,

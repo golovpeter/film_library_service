@@ -3,7 +3,8 @@ package films
 import "golang.org/x/net/context"
 
 type FilmsService interface {
-	CreateFilm(ctx context.Context, data *CreateFilmIn) error
-	ChangeFilmData(ctx context.Context, data *ChangeFilmIn) error
+	CreateFilm(ctx context.Context, data *FilmData) error
+	ChangeFilmData(ctx context.Context, data *FilmData) error
 	DeleteFilm(ctx context.Context, data *DeleteFilmIn) error
+	GettingSortedFilms(ctx context.Context, order string) ([]*FilmData, error)
 }

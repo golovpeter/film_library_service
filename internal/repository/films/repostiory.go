@@ -3,6 +3,7 @@ package films
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/golovpeter/vk_intership_test_task/internal/common"
@@ -28,7 +29,7 @@ const insertNewFilmActorsQuery = `
 	VALUES %s
 `
 
-func (r *repository) InsertNewFilm(ctx context.Context, data *CreateFilmIn) error {
+func (r *repository) InsertNewFilm(ctx context.Context, data *FilmData) error {
 	actorsIDs, err := r.getActorsIDs(ctx, data.Actors)
 
 	if len(data.Actors) != len(actorsIDs) {
@@ -71,7 +72,7 @@ const deleteCurActorsQuery = `
 	WHERE film_id = $1
 `
 
-func (r *repository) ChangeFilmData(ctx context.Context, data *ChangeFilmIn) error {
+func (r *repository) ChangeFilmData(ctx context.Context, data *FilmData) error {
 	var queryBuilder strings.Builder
 	var args []interface{}
 	argIdx := 1
@@ -181,6 +182,42 @@ func (r *repository) DeleteFilm(ctx context.Context, data *DeleteFilmIn) error {
 	return nil
 }
 
+func (r *repository) GettingSortedFilms(ctx context.Context, order string) ([]*FilmData, error) {
+	var gettingFilmsQuery = `
+	SELECT id, title, description, release_date, rating
+	FROM films
+	ORDER BY 
+`
+
+	if order == "" {
+		gettingFilmsQuery += "rating"
+	} else {
+		gettingFilmsQuery += order
+	}
+
+	if order != "title" {
+		gettingFilmsQuery += " desc"
+	}
+
+	var result []*FilmData
+
+	err := r.conn.SelectContext(ctx, &result, gettingFilmsQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, res := range result {
+		actors, err := r.getFilmActors(ctx, res.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		res.Actors = actors
+	}
+
+	return result, nil
+}
+
 const getActorsIDQuery = `
 	SELECT id
 	FROM actors
@@ -218,4 +255,25 @@ func (r *repository) getInsertActorsQuery(actorsIDs []int64, filmID int64) (stri
 	query = r.conn.Rebind(query)
 
 	return query, valueArgs
+}
+
+const getFilmActorsQuery = `
+	SELECT actors.name
+	FROM films
+         JOIN
+     films_and_actors ON films.id = films_and_actors.film_id
+         JOIN
+     actors ON films_and_actors.actor_id = actors.id
+	WHERE films.id = $1
+`
+
+func (r *repository) getFilmActors(ctx context.Context, filmID int64) ([]string, error) {
+	var actors []string
+
+	err := r.conn.SelectContext(ctx, &actors, getFilmActorsQuery, strconv.FormatInt(filmID, 10))
+	if err != nil {
+		return nil, err
+	}
+
+	return actors, nil
 }
